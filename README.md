@@ -1,6 +1,3 @@
-Got it! Here is the full README:
-
----
 
 # 🔍 Lost & Found System
 
@@ -244,17 +241,5 @@ Developed by **Ubaid**
 This project is for educational purposes only.
 
 ---
-
-Ab ye karna hai:
-
-1. VS Code mein `screenshots` folder ke andar sari images daalo
-2. `README.md` file root mein banao aur ye sara content paste karo
-3. Terminal mein run karo:
-
-```bash
-git add .
-git commit -m "Add README and screenshots"
-git push origin main
-```
 
 
