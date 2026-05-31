@@ -4,12 +4,12 @@ import Item from "../models/Item.js";
 
 const router = express.Router();
 
-//  Token Verify Middleware
+// Token Verify Middleware
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ message: "No token" });
   try {
-    const decoded = jwt.verify(token, "secretkey");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
     next();
   } catch {
@@ -17,7 +17,7 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-//  Report Item (Lost ya Found)
+// Report Item (Lost or Found)
 router.post("/report", verifyToken, async (req, res) => {
   try {
     const { title, description, category, location, type } = req.body;
@@ -45,7 +45,7 @@ router.get("/all", async (req, res) => {
   }
 });
 
-//  My Items
+// My Items
 router.get("/my", verifyToken, async (req, res) => {
   try {
     const items = await Item.find({ reportedBy: req.userId }).sort({ createdAt: -1 });
@@ -53,6 +53,9 @@ router.get("/my", verifyToken, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
+});
+
+
 // DELETE Item
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
@@ -68,8 +71,6 @@ router.delete("/:id", verifyToken, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
-});
-  
 });
 
 export default router;

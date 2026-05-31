@@ -5,23 +5,24 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import User from "./models/User.js";
 
-await mongoose.connect(process.env.MONGO_URI);
-console.log("MongoDB Connected ");
+// ✅ Change these to whatever you want
+const ADMIN_EMAIL = "admin@university.com";
+const ADMIN_PASSWORD = "admin123";
 
-// Force password reset
-const hash = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
-const updated = await User.findOneAndUpdate(
-  { email: "admin@university.com" },
-  { password: hash, isAdmin: true },
-  { new: true }
+await mongoose.connect(process.env.MONGO_URI);
+console.log("MongoDB Connected ✅");
+
+const hash = await bcrypt.hash(ADMIN_PASSWORD, 10);
+
+const admin = await User.findOneAndUpdate(
+  { email: ADMIN_EMAIL },
+  { password: hash, isAdmin: true, name: "Admin" },
+  { upsert: true, new: true }
 );
 
-if (updated) {
-  console.log("Admin password reset ✅");
-  console.log("Email:", updated.email);
-  console.log("isAdmin:", updated.isAdmin);
-} else {
-  console.log("Admin not found ❌");
-}
+console.log("✅ Admin created/updated successfully!");
+console.log("📧 Email:", admin.email);
+console.log("🔑 Password:", ADMIN_PASSWORD);
+console.log("👑 isAdmin:", admin.isAdmin);
 
 process.exit();
